@@ -21,4 +21,4 @@ export const SOLUTION_QUERY = defineQuery(
 
 
 export const SOLUTION_SLUGS_QUERY = defineQuery(`*[_type == "solution" && defined(slug.current)]{"slug": slug.current}`)
-export const NAV_QUERY = defineQuery(`*[_type == "solution" && defined(slug.current)] | order(title asc){_id, title, "slug": slug.current}`)
+export const NAV_QUERY = defineQuery(`*[_type == "solution" && defined(slug.current) && !string::startsWith(_id, "solution-check-")] | order(title asc){_id, title, "slug": slug.current}`)

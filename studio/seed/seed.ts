@@ -1,7 +1,10 @@
 /**
- * Seeds the sample content: three testimonials, one landing page and two solution pages.
- * Run with: npx sanity exec seed/seed.ts --with-user-token
- * Images are uploaded from seed/images. Documents are written with createOrReplace, so the script can be re-run.
+ * Resets the sample content: replaces the six sample documents (three testimonials, the landing page,
+ * two solution pages) and deletes their drafts. Anything else in the dataset is left alone.
+ *   npx sanity exec seed/seed.ts --with-user-token
+ * With --bootstrap, only creates the documents that do not exist yet and leaves existing ones and drafts untouched:
+ *   npx sanity exec seed/seed.ts --with-user-token -- --bootstrap
+ * Images are uploaded from seed/images.
  */
 import {readFileSync, existsSync} from 'node:fs'
 import {join} from 'node:path'
@@ -205,12 +208,16 @@ async function main() {
     ],
   }
 
-  // Testimonials first: the pages reference them. Any leftover drafts of these documents are dropped.
+  // Testimonials first: the pages reference them.
   const docs = [...testimonials, landing, cash, forecasting] as Array<{_id: string; _type: string}>
+  const bootstrap = process.argv.includes('--bootstrap')
   const tx = client.transaction()
-  for (const doc of docs) tx.createOrReplace(doc).delete(`drafts.${doc._id}`)
+  for (const doc of docs) {
+    if (bootstrap) tx.createIfNotExists(doc)
+    else tx.createOrReplace(doc).delete(`drafts.${doc._id}`)
+  }
   await tx.commit()
-  console.log('Seeded', docs.map((d) => d._id).join(', '))
+  console.log(bootstrap ? 'Created if missing:' : 'Reset:', docs.map((d) => d._id).join(', '))
 }
 
 main().catch((err) => {

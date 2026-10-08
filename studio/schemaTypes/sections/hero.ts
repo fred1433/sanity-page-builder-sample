@@ -1,5 +1,9 @@
-import {defineField, defineType} from 'sanity'
+import {defineField, defineType, type NumberRule} from 'sanity'
 import {BlockElementIcon} from '@sanity/icons/BlockElement'
+
+// Amount bounds. Skipped when the statement card is hidden (Plain layout), so a stale value cannot block publishing.
+const amountRules = (Rule: NumberRule, context?: {hidden?: boolean}) =>
+  context?.hidden ? Rule.skip() : [Rule.min(0), Rule.max(999999999999).error('Amounts above 999 billion do not fit on the statement card.')]
 
 export const hero = defineType({
   name: 'hero',
@@ -46,13 +50,13 @@ export const hero = defineType({
       options: {collapsible: true, collapsed: false},
       fields: [
         defineField({name: 'label', title: 'Caption', type: 'string', initialValue: 'Cash across every bank, consolidated'}),
-        defineField({name: 'gbp', title: 'Amount in GBP', type: 'number', validation: (Rule) => [Rule.min(0), Rule.max(999999999999).error('Amounts above 999 billion do not fit on the statement card.')]}),
-        defineField({name: 'eur', title: 'Amount in EUR', type: 'number', validation: (Rule) => [Rule.min(0), Rule.max(999999999999).error('Amounts above 999 billion do not fit on the statement card.')]}),
-        defineField({name: 'usd', title: 'Amount in USD', type: 'number', validation: (Rule) => [Rule.min(0), Rule.max(999999999999).error('Amounts above 999 billion do not fit on the statement card.')]}),
+        defineField({name: 'gbp', title: 'Amount in GBP', type: 'number', validation: amountRules}),
+        defineField({name: 'eur', title: 'Amount in EUR', type: 'number', validation: amountRules}),
+        defineField({name: 'usd', title: 'Amount in USD', type: 'number', validation: amountRules}),
         defineField({name: 'note', title: 'Footnote', type: 'string', initialValue: 'Illustrative figures'}),
       ],
-      validation: (Rule) =>
-        Rule.custom((figure, {parent}) => {
+      validation: (Rule, context) =>
+        context?.hidden ? Rule.skip() : Rule.custom((figure, {parent}) => {
           if ((parent as {variant?: string})?.variant !== 'statement') return true
           const f = figure as {gbp?: number; eur?: number; usd?: number} | undefined
           const missing = (['gbp', 'eur', 'usd'] as const).filter((k) => typeof f?.[k] !== 'number')

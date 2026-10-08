@@ -48,8 +48,9 @@ export const link = defineType({
       type: 'reference',
       to: [{type: 'landing'}, {type: 'solution'}],
       hidden: ({parent}) => (parent as LinkValue | undefined)?.kind === 'external',
-      validation: (Rule) =>
-        Rule.custom((page, {parent}) => {
+      // A hidden field is not validated (context.hidden covers the field and its ancestors).
+      validation: (Rule, context) =>
+        context?.hidden ? Rule.skip() : Rule.custom((page, {parent}) => {
           const p = parent as LinkValue | undefined
           if (p?.kind !== 'external' && p?.label?.trim() && !page)
             return `"${p.label}" has no destination. Choose a page here, switch "Goes to" to a web address, or clear the label to hide the button.`
@@ -61,7 +62,7 @@ export const link = defineType({
       title: 'Web address',
       type: 'url',
       hidden: ({parent}) => (parent as LinkValue | undefined)?.kind !== 'external',
-      validation: (Rule) => [
+      validation: (Rule, context) => context?.hidden ? Rule.skip() : [
         Rule.uri({scheme: ['https', 'mailto']}).error('Use a full address starting with https:// or mailto:'),
         Rule.custom((href, {parent}) => {
           const p = parent as LinkValue | undefined

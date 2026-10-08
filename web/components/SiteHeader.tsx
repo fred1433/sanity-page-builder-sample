@@ -1,6 +1,7 @@
 import NextLink from 'next/link'
 import type {NavItem} from '@/sanity/types'
 import {sealPaths} from '@/lib/guilloche'
+import {pagePath} from '@/lib/routes'
 
 export function SiteHeader({nav}: {nav: NavItem[]}) {
   return (
@@ -14,11 +15,14 @@ export function SiteHeader({nav}: {nav: NavItem[]}) {
         </NextLink>
         <nav aria-label="Solutions">
           <ul className="site-nav">
-            {nav.map((item) => (
-              <li key={item._id}>
-                <NextLink href={`/solutions/${item.slug}/`}>{item.title}</NextLink>
-              </li>
-            ))}
+            {nav.map((item) => {
+              const path = pagePath('solution', item.slug)
+              return path ? (
+                <li key={item._id}>
+                  <NextLink href={path}>{item.title}</NextLink>
+                </li>
+              ) : null
+            })}
           </ul>
         </nav>
       </div>

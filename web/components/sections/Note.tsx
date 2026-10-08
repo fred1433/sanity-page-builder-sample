@@ -41,7 +41,8 @@ export function Note({figure, seal}: {figure: Figure; seal?: ReactNode}) {
       <div className="note__body">
         {figure.label && <figcaption className="note__caption">{figure.label}</figcaption>}
         <p className="note__figure" style={{['--chars' as string]: formatted.length + 1}}>
-          <span className="sr-only">{`${current.symbol}${formatted}`}</span>
+          {/* Announced to screen readers whenever the currency changes. */}
+          <span className="sr-only" aria-live="polite" aria-atomic="true">{`${current.symbol}${formatted} ${current.code}`}</span>
           <span className="note__symbol" aria-hidden="true">
             {current.symbol}
           </span>

@@ -9,6 +9,7 @@ import type {NavItem} from '@/sanity/types'
 import {SampleBanner} from '@/components/SampleBanner'
 import {SiteHeader} from '@/components/SiteHeader'
 import {SiteFooter} from '@/components/SiteFooter'
+import {DraftModeBar} from '@/components/DraftModeBar'
 import './globals.css'
 
 const grotesk = Schibsted_Grotesk({subsets: ['latin'], weight: ['400', '500', '700', '800'], variable: '--font-grotesk', display: 'swap'})
@@ -41,6 +42,7 @@ export default async function RootLayout({children}: {children: React.ReactNode}
         <SiteFooter />
         <SanityLive includeDrafts={isEnabled} />
         {isEnabled && <VisualEditing />}
+        {isEnabled && <DraftModeBar />}
       </body>
     </html>
   )
