@@ -3,7 +3,9 @@ Release checks on the deployed site and the hosted Studio.
 1. Every page works signed out: status 200, no failed requests, no console errors.
 2. Phone width: no horizontal overflow on any page.
 3. Interactions: currency switch, walkthrough dialog and its video, navigation links.
-4. Invalid content cannot be published from the Studio: a second hero, and a testimonial without attribution.
+4. Invalid content cannot be published from the Studio: a second hero added in the form, then drafts written through the API
+   (CTA without a main button, statement card missing an amount, testimonial without attribution or with a blank name),
+   against a valid control draft.
 Draft/published separation and publish-without-redeploy are covered by r9_presentation_check.py.
 Usage: SITE_URL=... STUDIO_URL=... python release_checks.py <out_dir>
 """
@@ -75,27 +77,20 @@ with sync_playwright() as p:
     pg.screenshot(path=f'{out}/blocked_second_hero.png')
     mutate([{'delete': {'id': 'drafts.solution-cash-visibility'}}])
 
-    pg.goto(f'{STUDIO}/intent/create/template=testimonial;type=testimonial;id=release-check-testimonial/', wait_until='domcontentloaded')
-    pg.locator('textarea').first.wait_for(timeout=60000); time.sleep(2)
-    pg.locator('textarea').first.fill('A quote with nobody attached to it.'); time.sleep(4)
-    R['testimonial_without_attribution_publish_disabled'] = pg.locator('[data-testid="action-publish"]').is_disabled()
-    R['attribution_message_shown'] = pg.get_by_text('Add the name of the person quoted').count() > 0
-    pg.screenshot(path=f'{out}/blocked_testimonial.png')
-    mutate([{'delete': {'id': 'drafts.release-check-testimonial'}}])
-
     # Object-level rules (CTA without a main button, statement card missing an amount) are checked in the Studio itself:
     # outside the Studio, the CLI downgrades object-level custom rules to warnings when it adds its unknown-fields check.
     cases = {
         'cta_without_main_button': [{'_key': 'a', '_type': 'hero', 'variant': 'plain', 'heading': 'Check'}, {'_key': 'b', '_type': 'cta', 'heading': 'No button', 'tone': 'ink'}],
         'statement_missing_amount': [{'_key': 'a', '_type': 'hero', 'variant': 'statement', 'heading': 'Check', 'figure': {'gbp': 5}}],
-        'blank_testimonial_name': None,
+        'testimonial_without_attribution': {'quote': 'A quote with nobody attached to it.'},
+        'blank_testimonial_name': {'quote': 'Words.', 'name': '   '},
         # Control: a valid draft must be publishable, so a disabled button above means validation, not something else.
         'valid_control': [{'_key': 'a', '_type': 'hero', 'variant': 'plain', 'heading': 'Check'}],
     }
     for name, sections in cases.items():
         doc_id = f'release-check-{name.replace("_", "-")}'
-        if sections is None:
-            mutate([{'createOrReplace': {'_id': f'drafts.{doc_id}', '_type': 'testimonial', 'quote': 'Words.', 'name': '   '}}])
+        if isinstance(sections, dict):
+            mutate([{'createOrReplace': {'_id': f'drafts.{doc_id}', '_type': 'testimonial', **sections}}])
             url = f'{STUDIO}/structure/testimonial;{doc_id}'
         else:
             mutate([{'createOrReplace': {'_id': f'drafts.{doc_id}', '_type': 'solution', 'title': 'Check', 'slug': {'_type': 'slug', 'current': doc_id}, 'sections': sections}}])
