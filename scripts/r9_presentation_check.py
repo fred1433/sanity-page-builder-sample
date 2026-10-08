@@ -17,7 +17,7 @@ from playwright.sync_api import sync_playwright
 PROJECT = os.environ.get('SANITY_PROJECT_ID', 'vg4jfonv')
 DATASET = os.environ.get('SANITY_DATASET', 'production')
 STUDIO = os.environ.get('STUDIO_URL', 'https://orvane-sample.sanity.studio')
-SITE = os.environ.get('SITE_URL', 'https://theaipipe.com/demos/kota-sanity/')
+SITE = os.environ['SITE_URL']  # deployed front end, with its trailing slash
 TOKEN = json.load(open(os.path.expanduser('~/.config/sanity/config.json')))['authToken']
 out = sys.argv[1]
 os.makedirs(out, exist_ok=True)

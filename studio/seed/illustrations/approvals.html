@@ -1,0 +1,31 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;800&family=Bodoni+Moda:opsz,wght@6..96,500&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#F1F3EE;--ink:#0E2B2A;--green:#3D7A68;--violet:#6B5CA5;--rule:#C8D0C8;--sheet:#FBFCF9}
+*{box-sizing:border-box;margin:0}
+body{width:1200px;height:900px;background:#DCE3DC;font-family:'Schibsted Grotesk';color:var(--ink);display:grid;place-items:center;overflow:hidden}
+.slip{width:780px;background:var(--sheet);padding:50px 56px;transform:rotate(1.8deg);box-shadow:0 30px 60px -30px rgba(14,43,42,.35);position:relative}
+.slip:before{content:"";position:absolute;inset:14px;border:1px solid var(--rule)}
+.k{font-size:14px;color:#4F6662}
+.row{display:flex;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--rule);font-size:19px}
+h2{font-size:30px;font-weight:800;letter-spacing:-.03em;margin-bottom:22px}
+.amt{font-family:'Bodoni Moda';font-size:52px;margin:18px 0 6px}
+.sigs{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:30px}
+.sig{border:1.5px solid var(--green);padding:16px 18px;min-height:118px;position:relative}
+.sig b{display:block;font-size:17px;margin-top:6px}
+.sig svg{position:absolute;right:16px;bottom:12px}
+.sig.wait{border-style:dashed;border-color:var(--violet)}
+.sig.wait b{color:var(--violet)}
+</style></head><body>
+<div class="slip">
+  <h2>Payment for approval</h2>
+  <div class="row"><span class="k">From</span><span>Europe BV, operating account</span></div>
+  <div class="row"><span class="k">To</span><span>Supplier run, 38 payees</span></div>
+  <div class="row"><span class="k">Rule</span><span>Over EUR 250,000 needs two signatures</span></div>
+  <div class="amt">€ 1,284,600.00</div>
+  <div class="sigs">
+    <div class="sig"><span class="k">First signatory</span><b>Group treasurer</b>
+      <svg width="120" height="44" viewBox="0 0 120 44"><path d="M4 30c10-18 18-22 22-12s-6 18 2 14 14-24 22-20-4 22 6 18 12-16 20-14 6 10 14 8 12-8 18-6" fill="none" stroke="#0E2B2A" stroke-width="2" stroke-linecap="round"/></svg></div>
+    <div class="sig wait"><span class="k">Second signatory</span><b>Finance director, waiting</b></div>
+  </div>
+</div></body></html>

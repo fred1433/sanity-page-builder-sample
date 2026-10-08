@@ -17,6 +17,7 @@ export const SOLUTION_QUERY = defineQuery(
   `*[_type == "solution" && slug.current == $slug][0]{_id, _type, title, description, "slug": slug.current, ${SECTIONS}}`,
 )
 
-export const NAV_QUERY = defineQuery(`*[_type == "solution" && defined(slug.current)] | order(title asc){_id, title, "slug": slug.current}`)
+
 
 export const SOLUTION_SLUGS_QUERY = defineQuery(`*[_type == "solution" && defined(slug.current)]{"slug": slug.current}`)
+export const NAV_QUERY = defineQuery(`*[_type == "solution" && defined(slug.current)] | order(title asc){_id, title, "slug": slug.current}`)

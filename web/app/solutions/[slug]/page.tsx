@@ -1,3 +1,4 @@
+import type {Metadata} from 'next'
 import {notFound} from 'next/navigation'
 import {sanityFetch} from '@/sanity/live'
 import {SOLUTION_QUERY} from '@/sanity/queries'
@@ -6,14 +7,17 @@ import {Sections} from '@/components/Sections'
 
 export const dynamic = 'force-dynamic'
 
-export default async function SolutionPage(props: {params: Promise<{slug: string}>}) {
+type Props = {params: Promise<{slug: string}>}
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const {slug} = await props.params
+  const {data} = (await sanityFetch({query: SOLUTION_QUERY, params: {slug}, stega: false})) as {data: PageData}
+  return {title: data?.title, description: data?.description}
+}
+
+export default async function SolutionPage(props: Props) {
   const {slug} = await props.params
   const {data} = (await sanityFetch({query: SOLUTION_QUERY, params: {slug}})) as {data: PageData}
   if (!data) notFound()
-  return (
-    <main>
-      <h1>{data.title}</h1>
-      <Sections sections={data.sections} />
-    </main>
-  )
+  return <Sections sections={data.sections} />
 }

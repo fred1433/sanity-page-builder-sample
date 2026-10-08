@@ -1,16 +1,36 @@
-import type {Metadata} from 'next'
+import type {Metadata, Viewport} from 'next'
 import {draftMode} from 'next/headers'
+import {Bodoni_Moda, Schibsted_Grotesk} from 'next/font/google'
 import {VisualEditing} from 'next-sanity/visual-editing'
-import {SanityLive} from '@/sanity/live'
+import {SanityLive, sanityFetch} from '@/sanity/live'
+import {NAV_QUERY} from '@/sanity/queries'
+import type {NavItem} from '@/sanity/types'
+import {SampleBanner} from '@/components/SampleBanner'
+import {SiteHeader} from '@/components/SiteHeader'
+import {SiteFooter} from '@/components/SiteFooter'
+import './globals.css'
 
-export const metadata: Metadata = {title: 'Orvane'}
+const grotesk = Schibsted_Grotesk({subsets: ['latin'], weight: ['400', '500', '700', '800'], variable: '--font-grotesk', display: 'swap'})
+const bodoni = Bodoni_Moda({subsets: ['latin'], weight: ['500'], variable: '--font-bodoni', display: 'swap'})
+
+export const metadata: Metadata = {
+  title: {default: 'Orvane', template: '%s, Orvane'},
+  description: 'An independent Sanity and Next.js sample: a page builder, visual editing and a reviewed change. Fictional content.',
+  robots: {index: false, follow: false},
+}
+
+export const viewport: Viewport = {themeColor: '#F1F3EE'}
 
 export default async function RootLayout({children}: {children: React.ReactNode}) {
   const {isEnabled} = await draftMode()
+  const {data: nav} = (await sanityFetch({query: NAV_QUERY})) as {data: NavItem[] | null}
   return (
-    <html lang="en-GB">
+    <html lang="en-GB" className={`${grotesk.variable} ${bodoni.variable}`}>
       <body>
-        {children}
+        <SampleBanner />
+        <SiteHeader nav={nav || []} />
+        <main id="main">{children}</main>
+        <SiteFooter />
         <SanityLive includeDrafts={isEnabled} />
         {isEnabled && <VisualEditing />}
       </body>
