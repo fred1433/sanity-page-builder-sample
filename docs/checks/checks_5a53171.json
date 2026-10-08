@@ -1,0 +1,200 @@
+{
+  "verified_commit": "5a53171",
+  "working_tree_clean": true,
+  "site": "https://theaipipe.com/demos/kota-sanity/",
+  "studio": "https://orvane-sample.sanity.studio",
+  "finished": "2026-10-08T16:22:50Z",
+  "exit_codes": {
+    "r9_presentation_check.py": 0,
+    "release_checks.py": 0
+  },
+  "passed": true,
+  "reports": {
+    "r9_presentation_check": {
+      "passed": true,
+      "checks": [
+        {
+          "check": "test page published and served",
+          "ok": true
+        },
+        {
+          "check": "5b. no draft control inside the Studio preview",
+          "ok": true
+        },
+        {
+          "check": "1. click opens the heading field",
+          "ok": true
+        },
+        {
+          "check": "2. unpublished value updates the preview",
+          "ok": true
+        },
+        {
+          "check": "3. signed-out session shows the published value",
+          "ok": true
+        },
+        {
+          "check": "5a. standalone draft tab shows the draft value",
+          "ok": true
+        },
+        {
+          "check": "5a. \"Draft preview \u00b7 Exit preview\" control is shown",
+          "ok": true
+        },
+        {
+          "check": "5c. after Exit preview the published value is back and the control is gone",
+          "ok": true
+        },
+        {
+          "check": "4. publishing updates the public page without a redeploy",
+          "ok": true
+        },
+        {
+          "check": "cleanup: test page removed",
+          "ok": true
+        }
+      ]
+    },
+    "release_checks": {
+      "passed": true,
+      "checks": [
+        {
+          "check": "1440px / answers 200 signed out",
+          "ok": true
+        },
+        {
+          "check": "1440px / has no horizontal overflow",
+          "ok": true
+        },
+        {
+          "check": "1440px /solutions/cash-visibility/ answers 200 signed out",
+          "ok": true
+        },
+        {
+          "check": "1440px /solutions/cash-visibility/ has no horizontal overflow",
+          "ok": true
+        },
+        {
+          "check": "1440px /solutions/forecasting/ answers 200 signed out",
+          "ok": true
+        },
+        {
+          "check": "1440px /solutions/forecasting/ has no horizontal overflow",
+          "ok": true
+        },
+        {
+          "check": "1440px no failed requests",
+          "ok": true
+        },
+        {
+          "check": "1440px no console errors",
+          "ok": true
+        },
+        {
+          "check": "390px / answers 200 signed out",
+          "ok": true
+        },
+        {
+          "check": "390px / has no horizontal overflow",
+          "ok": true
+        },
+        {
+          "check": "390px /solutions/cash-visibility/ answers 200 signed out",
+          "ok": true
+        },
+        {
+          "check": "390px /solutions/cash-visibility/ has no horizontal overflow",
+          "ok": true
+        },
+        {
+          "check": "390px /solutions/forecasting/ answers 200 signed out",
+          "ok": true
+        },
+        {
+          "check": "390px /solutions/forecasting/ has no horizontal overflow",
+          "ok": true
+        },
+        {
+          "check": "390px no failed requests",
+          "ok": true
+        },
+        {
+          "check": "390px no console errors",
+          "ok": true
+        },
+        {
+          "check": "currency switch updates the announced amount",
+          "ok": true
+        },
+        {
+          "check": "walkthrough dialog opens",
+          "ok": true
+        },
+        {
+          "check": "walkthrough video plays",
+          "ok": true
+        },
+        {
+          "check": "video box matches the 8:5 video",
+          "ok": true
+        },
+        {
+          "check": "walkthrough dialog closes",
+          "ok": true
+        },
+        {
+          "check": "header link reaches Forecasting",
+          "ok": true
+        },
+        {
+          "check": "publish blocked: second valid hero",
+          "ok": true
+        },
+        {
+          "check": "publish blocked: cta without main button",
+          "ok": true
+        },
+        {
+          "check": "publish blocked: label without destination",
+          "ok": true
+        },
+        {
+          "check": "publish blocked: statement missing amount",
+          "ok": true
+        },
+        {
+          "check": "publish blocked: slug with slash",
+          "ok": true
+        },
+        {
+          "check": "publish blocked: slug with hash",
+          "ok": true
+        },
+        {
+          "check": "publish blocked: testimonial without attribution",
+          "ok": true
+        },
+        {
+          "check": "publish blocked: blank testimonial name",
+          "ok": true
+        },
+        {
+          "check": "publish allowed: valid control",
+          "ok": true
+        },
+        {
+          "check": "publish allowed: hidden external address",
+          "ok": true
+        },
+        {
+          "check": "publish allowed: hidden out of range amount",
+          "ok": true
+        },
+        {
+          "check": "cleanup: test documents removed",
+          "ok": true
+        }
+      ]
+    }
+  }
+}
