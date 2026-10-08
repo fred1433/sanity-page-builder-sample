@@ -26,7 +26,6 @@ function Digit({value}: {value: number}) {
 
 /**
  * The statement note: consolidated balance, switchable between three currencies.
- * The rosette is rendered on the server and passed in, so its long path data is not shipped twice.
  */
 export function Note({figure, seal}: {figure: Figure; seal?: ReactNode}) {
   const available = CURRENCIES.filter((c) => typeof figure[c.key] === 'number')

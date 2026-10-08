@@ -94,7 +94,7 @@ Checked: the diff file by file, Studio validation on the drafts, draft rendering
 
 Corrected:
 - The example quotes named companies that could exist. They now describe a sector instead of a company.
-- The run noticed that the rosette ornament rendered as a black disc in the earlier snapshots. Cause: its first path lost its attributes after hydration. Fixed by rendering it on the server.
+- The run noticed that the rosette ornament rendered as a black disc in the earlier snapshots. Cause: its first path lost its attributes after hydration. Fixed by serving the rosette as a static SVG file (`web/scripts/rosette-svg.mjs`), which also took the page from 850 KB of HTML to 150 KB.
 - `scripts/page_snapshots.py` waited for an idle network, which the live preview never reaches. It now waits for page load.
 
 After review, the three testimonials were published, and the landing page with its new section was published from the Studio (the moment is in the video). The Forecasting page's testimonials section is still a draft.

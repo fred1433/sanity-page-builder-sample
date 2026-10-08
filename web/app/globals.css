@@ -132,11 +132,7 @@ img { max-width: 100%; height: auto; display: block; }
   transition: transform 1100ms cubic-bezier(0.2, 0.7, 0.1, 1);
   pointer-events: none;
 }
-.rosette__line { fill: none; stroke-width: 0.5; }
-.rosette__line--0 { stroke: var(--green); }
-.rosette__line--1 { stroke: var(--violet); opacity: 0.8; }
-.rosette__line--2 { stroke: var(--ink); opacity: 0.6; }
-.wordmark__seal .rosette__line { stroke-width: 0.35; }
+.note__seal img { width: 100%; height: 100%; }
 
 /* Section headings shared by grid and image/text */
 .section-heading { font-weight: 800; font-size: clamp(1.9rem, 1.2rem + 2.2vw, 3.1rem); line-height: 1.04; letter-spacing: -0.035em; text-wrap: balance; overflow-wrap: anywhere; }
@@ -233,7 +229,6 @@ img { max-width: 100%; height: auto; display: block; }
   .note { min-height: 0; }
   .note__body { padding: 52px 20px 56px; }
   .note__seal { width: 300px; height: 300px; right: -170px; top: 26px; margin-top: 0; opacity: 0.55; }
-  .note__seal svg { width: 300px; height: 300px; }
   .note__figure { font-size: clamp(2.6rem, 13.4vw, 4.2rem); }
   .walkthrough__bar { flex-direction: column; align-items: flex-start; }
 }
