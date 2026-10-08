@@ -31,10 +31,9 @@ export function SampleBanner() {
         <div className="walkthrough__frame">
           <video ref={video} controls playsInline preload="none" poster={`${basePath}/workflow-poster.jpg`}>
             <source src={`${basePath}/workflow.mp4`} type="video/mp4" />
-            <track kind="captions" src={`${basePath}/workflow.vtt`} srcLang="en" label="English" />
           </video>
           <div className="walkthrough__bar">
-            <p>The editor workflow in the Studio, filmed on this site. Captions are on the video.</p>
+            <p>The editor workflow in the Studio, filmed on this site. Captions are part of the picture.</p>
             <button type="button" className="btn btn--secondary" onClick={close}>
               Close
             </button>
