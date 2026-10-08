@@ -11,8 +11,9 @@ export type PageRef = {_id: string; _type: string}
  */
 export function Testimonials({section, page}: {section: TestimonialsSection; page?: PageRef}) {
   // A reference to a missing or unpublished testimonial resolves to nothing: skip it rather than show an empty quote.
-  const items = (section.items || []).filter((item) => item.quote && item.name)
-  if (!section.heading && !items.length) return null
+  const items = (section.items || []).filter((item) => item.quote?.trim() && item.name?.trim())
+  // No quote resolves (all unpublished or deleted): show nothing rather than a heading over an empty space.
+  if (!items.length) return null
   const attr = (path: string) =>
     page
       ? createDataAttribute({id: page._id.replace(/^drafts\./, ''), type: page._type, path, projectId, dataset, baseUrl: studioUrl}).toString()

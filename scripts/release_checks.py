@@ -12,7 +12,7 @@ from playwright.sync_api import sync_playwright
 
 SITE = os.environ['SITE_URL'].rstrip('/')
 STUDIO = os.environ['STUDIO_URL'].rstrip('/')
-PROJECT = os.environ.get('SANITY_PROJECT_ID', 'vg4jfonv')
+PROJECT = os.environ['SANITY_PROJECT_ID']
 TOKEN = json.load(open(os.path.expanduser('~/.config/sanity/config.json')))['authToken']
 PAGES = ['/', '/solutions/cash-visibility/', '/solutions/forecasting/']
 out = sys.argv[1]; os.makedirs(out, exist_ok=True)
@@ -82,6 +82,29 @@ with sync_playwright() as p:
     R['attribution_message_shown'] = pg.get_by_text('Add the name of the person quoted').count() > 0
     pg.screenshot(path=f'{out}/blocked_testimonial.png')
     mutate([{'delete': {'id': 'drafts.release-check-testimonial'}}])
+
+    # Object-level rules (CTA without a main button, statement card missing an amount) are checked in the Studio itself:
+    # outside the Studio, the CLI downgrades object-level custom rules to warnings when it adds its unknown-fields check.
+    cases = {
+        'cta_without_main_button': [{'_key': 'a', '_type': 'hero', 'variant': 'plain', 'heading': 'Check'}, {'_key': 'b', '_type': 'cta', 'heading': 'No button', 'tone': 'ink'}],
+        'statement_missing_amount': [{'_key': 'a', '_type': 'hero', 'variant': 'statement', 'heading': 'Check', 'figure': {'gbp': 5}}],
+        'blank_testimonial_name': None,
+        # Control: a valid draft must be publishable, so a disabled button above means validation, not something else.
+        'valid_control': [{'_key': 'a', '_type': 'hero', 'variant': 'plain', 'heading': 'Check'}],
+    }
+    for name, sections in cases.items():
+        doc_id = f'release-check-{name.replace("_", "-")}'
+        if sections is None:
+            mutate([{'createOrReplace': {'_id': f'drafts.{doc_id}', '_type': 'testimonial', 'quote': 'Words.', 'name': '   '}}])
+            url = f'{STUDIO}/structure/testimonial;{doc_id}'
+        else:
+            mutate([{'createOrReplace': {'_id': f'drafts.{doc_id}', '_type': 'solution', 'title': 'Check', 'slug': {'_type': 'slug', 'current': doc_id}, 'sections': sections}}])
+            url = f'{STUDIO}/structure/solution;{doc_id}'
+        pg.goto(url, wait_until='domcontentloaded')
+        pg.locator('[data-testid="action-publish"]').wait_for(timeout=60000); time.sleep(5)
+        R[f'{name}_publish_disabled'] = pg.locator('[data-testid="action-publish"]').is_disabled()
+        pg.screenshot(path=f'{out}/blocked_{name}.png')
+        mutate([{'delete': {'id': f'drafts.{doc_id}'}}])
     ctx.close(); b.close()
 
 print(json.dumps(R, indent=2))

@@ -10,7 +10,7 @@ from playwright.sync_api import sync_playwright
 SITE = os.environ['SITE_URL'].rstrip('/')
 STUDIO = os.environ['STUDIO_URL'].rstrip('/')
 REPO_COMMIT = os.environ['COMMIT_URL']
-PROJECT = os.environ.get('SANITY_PROJECT_ID', 'vg4jfonv')
+PROJECT = os.environ['SANITY_PROJECT_ID']
 TOKEN = json.load(open(os.path.expanduser('~/.config/sanity/config.json')))['authToken']
 NEW_HEADING = 'Every bank, every entity, one cash position by 8am.'
 work = sys.argv[1]

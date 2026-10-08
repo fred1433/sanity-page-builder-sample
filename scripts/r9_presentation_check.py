@@ -14,7 +14,7 @@ Usage: python r9_presentation_check.py <out_dir>
 import json, os, sys, time, urllib.request, urllib.parse
 from playwright.sync_api import sync_playwright
 
-PROJECT = os.environ.get('SANITY_PROJECT_ID', 'vg4jfonv')
+PROJECT = os.environ['SANITY_PROJECT_ID']
 DATASET = os.environ.get('SANITY_DATASET', 'production')
 STUDIO = os.environ.get('STUDIO_URL', 'https://orvane-sample.sanity.studio')
 SITE = os.environ['SITE_URL']  # deployed front end, with its trailing slash

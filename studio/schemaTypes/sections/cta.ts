@@ -18,7 +18,7 @@ export const cta = defineType({
         Rule.custom((value) => {
           const v = value as {label?: string} | undefined
           return v?.label?.trim() ? true : 'A call to action needs a main button. Give it a label and a destination.'
-        }),
+        }).error('A call to action needs a main button. Give it a label and a destination.'),
     }),
     defineField({name: 'secondary', title: 'Second button', type: 'link'}),
     defineField({

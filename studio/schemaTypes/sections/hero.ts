@@ -46,18 +46,19 @@ export const hero = defineType({
       options: {collapsible: true, collapsed: false},
       fields: [
         defineField({name: 'label', title: 'Caption', type: 'string', initialValue: 'Cash across every bank, consolidated'}),
-        defineField({name: 'gbp', title: 'Amount in GBP', type: 'number', validation: (Rule) => Rule.min(0)}),
-        defineField({name: 'eur', title: 'Amount in EUR', type: 'number', validation: (Rule) => Rule.min(0)}),
-        defineField({name: 'usd', title: 'Amount in USD', type: 'number', validation: (Rule) => Rule.min(0)}),
+        defineField({name: 'gbp', title: 'Amount in GBP', type: 'number', validation: (Rule) => [Rule.min(0), Rule.max(999999999999).error('Amounts above 999 billion do not fit on the statement card.')]}),
+        defineField({name: 'eur', title: 'Amount in EUR', type: 'number', validation: (Rule) => [Rule.min(0), Rule.max(999999999999).error('Amounts above 999 billion do not fit on the statement card.')]}),
+        defineField({name: 'usd', title: 'Amount in USD', type: 'number', validation: (Rule) => [Rule.min(0), Rule.max(999999999999).error('Amounts above 999 billion do not fit on the statement card.')]}),
         defineField({name: 'note', title: 'Footnote', type: 'string', initialValue: 'Illustrative figures'}),
       ],
       validation: (Rule) =>
         Rule.custom((figure, {parent}) => {
           if ((parent as {variant?: string})?.variant !== 'statement') return true
           const f = figure as {gbp?: number; eur?: number; usd?: number} | undefined
-          if (!f?.gbp || !f?.eur || !f?.usd) return 'The statement layout needs all three amounts. Fill GBP, EUR and USD, or switch the layout to Plain.'
+          const missing = (['gbp', 'eur', 'usd'] as const).filter((k) => typeof f?.[k] !== 'number')
+          if (missing.length) return 'The statement layout needs all three amounts. Fill GBP, EUR and USD, or switch the layout to Plain.'
           return true
-        }),
+        }).error('The statement layout needs all three amounts. Fill GBP, EUR and USD, or switch the layout to Plain.'),
     }),
     defineField({name: 'primary', title: 'Main button', type: 'link'}),
     defineField({name: 'secondary', title: 'Second button', type: 'link'}),

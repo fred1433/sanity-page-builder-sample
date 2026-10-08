@@ -1,5 +1,5 @@
 /**
- * Seeds the sample content: one landing page and two solution pages.
+ * Seeds the sample content: three testimonials, one landing page and two solution pages.
  * Run with: npx sanity exec seed/seed.ts --with-user-token
  * Images are uploaded from seed/images. Documents are written with createOrReplace, so the script can be re-run.
  */
@@ -26,6 +26,37 @@ async function upload(file: string) {
 async function main() {
   const ledgerImage = await upload('statement.png')
   const teamImage = await upload('approvals.png')
+
+  const testimonials = [
+    {
+      _id: 'testimonial-priya-raman',
+      _type: 'testimonial',
+      quote:
+        'We used to spend the first hour of every day logging into bank portals. Now the position is waiting when we sit down, and the morning call starts with decisions instead of numbers.',
+      name: 'Priya Raman',
+      role: 'Group Treasurer, food manufacturer',
+    },
+    {
+      _id: 'testimonial-tomas-ferreira',
+      _type: 'testimonial',
+      quote: 'With actuals sitting next to the forecast, we caught a duplicated supplier payment the morning it cleared, not three weeks later at month end.',
+      name: 'Tomás Ferreira',
+      role: 'Finance Director, logistics group',
+    },
+    {
+      _id: 'testimonial-hannah-okafor',
+      _type: 'testimonial',
+      quote: 'Our bank mandate finally lives in the approval rules instead of a spreadsheet nobody trusted.',
+      name: 'Hannah Okafor',
+      role: 'Head of Treasury Operations, retail group',
+    },
+  ]
+  const quotes = (heading: string, ids: string[]) => ({
+    _key: key(),
+    _type: 'testimonials',
+    heading,
+    items: ids.map((id) => ({_key: key(), ...ref(id)})),
+  })
 
   const landing = {
     _id: 'landing',
@@ -67,13 +98,14 @@ async function main() {
         image: ledgerImage ? {_type: 'image', alt: 'A consolidated bank statement listing balances by entity and currency', asset: ref(ledgerImage)} : undefined,
         imageSide: 'right',
       },
+      quotes('What finance teams say', ['testimonial-priya-raman', 'testimonial-tomas-ferreira', 'testimonial-hannah-okafor']),
       {
         _key: key(),
         _type: 'cta',
         heading: 'Bring your bank list. We will bring the position.',
-        body: 'A thirty minute walkthrough with your own banks and entities on screen.',
+        body: 'Start with the morning view, then see how the forecast checks itself against the bank.',
         tone: 'ink',
-        primary: {_type: 'link', kind: 'external', href: 'mailto:walkthrough@orvane.example', label: 'Book a walkthrough'},
+        primary: {...toPage('solution-cash-visibility'), label: 'Start with cash visibility'},
         secondary: {...toPage('solution-forecasting'), label: 'Read about forecasting'},
       },
     ],
@@ -92,7 +124,8 @@ async function main() {
         variant: 'plain',
         heading: 'Group cash by entity, bank and currency, every morning.',
         intro: 'Statements arrive overnight, are matched against the ledger, and become one position your whole team can read.',
-        primary: {_type: 'link', kind: 'external', href: 'mailto:walkthrough@orvane.example', label: 'Book a walkthrough'},
+        primary: {...toPage('solution-forecasting'), label: 'How forecasting works'},
+        secondary: {...toPage('landing'), label: 'Back to the overview'},
       },
       {
         _key: key(),
@@ -116,9 +149,9 @@ async function main() {
       {
         _key: key(),
         _type: 'cta',
-        heading: 'See it with your own banks',
+        heading: 'Next: a forecast built on the same position',
         tone: 'paper',
-        primary: {_type: 'link', kind: 'external', href: 'mailto:walkthrough@orvane.example', label: 'Book a walkthrough'},
+        primary: {...toPage('solution-forecasting'), label: 'Read about forecasting'},
         secondary: {...toPage('landing'), label: 'Back to the overview'},
       },
     ],
@@ -137,8 +170,8 @@ async function main() {
         variant: 'plain',
         heading: 'A thirteen week forecast that checks itself against the bank.',
         intro: 'Each forecast line is compared with what actually cleared, so the forecast improves week after week instead of being rebuilt every quarter.',
-        primary: {_type: 'link', kind: 'external', href: 'mailto:walkthrough@orvane.example', label: 'Book a walkthrough'},
-        secondary: {...toPage('solution-cash-visibility'), label: 'See cash visibility'},
+        primary: {...toPage('solution-cash-visibility'), label: 'See cash visibility'},
+        secondary: {...toPage('landing'), label: 'Back to the overview'},
       },
       {
         _key: key(),
@@ -159,21 +192,25 @@ async function main() {
         image: teamImage ? {_type: 'image', alt: 'A payment approval routed to two signatories', asset: ref(teamImage)} : undefined,
         imageSide: 'right',
       },
+      quotes('Variances, caught the day they happen', ['testimonial-tomas-ferreira', 'testimonial-priya-raman']),
       {
         _key: key(),
         _type: 'cta',
-        heading: 'Score last quarter’s forecast with us',
-        body: 'Send last quarter’s forecast and we will show you where it drifted.',
+        heading: 'Score last quarter’s forecast against the bank',
+        body: 'The forecast starts from the same reconciled position as the morning view.',
         tone: 'ink',
-        primary: {_type: 'link', kind: 'external', href: 'mailto:walkthrough@orvane.example', label: 'Book a walkthrough'},
+        primary: {...toPage('solution-cash-visibility'), label: 'See cash visibility'},
+        secondary: {...toPage('landing'), label: 'Back to the overview'},
       },
     ],
   }
 
+  // Testimonials first: the pages reference them. Any leftover drafts of these documents are dropped.
+  const docs = [...testimonials, landing, cash, forecasting] as Array<{_id: string; _type: string}>
   const tx = client.transaction()
-  for (const doc of [landing, cash, forecasting] as Array<{_id: string; _type: string}>) tx.createOrReplace(doc)
+  for (const doc of docs) tx.createOrReplace(doc).delete(`drafts.${doc._id}`)
   await tx.commit()
-  console.log('Seeded', [landing, cash, forecasting].map((d) => d._id).join(', '))
+  console.log('Seeded', docs.map((d) => d._id).join(', '))
 }
 
 main().catch((err) => {

@@ -99,14 +99,15 @@ img { max-width: 100%; height: auto; display: block; }
 .note__lattice path, .cta__lattice path { fill: none; stroke: var(--green); stroke-width: 0.55; vector-effect: non-scaling-stroke; }
 .note__lattice--top { top: 16px; }
 .note__lattice--bottom { bottom: 16px; }
-.note__body { position: relative; z-index: 1; padding: 56px clamp(24px, 5vw, 72px); display: grid; gap: 14px; justify-items: start; }
+.note__body { container-type: inline-size; position: relative; z-index: 1; padding: 56px clamp(24px, 5vw, 72px); display: grid; gap: 14px; justify-items: start; }
 .note__caption { font-weight: 500; color: var(--green); font-size: 1rem; }
 .note__figure {
   display: flex;
   align-items: baseline;
   font-family: var(--font-figure);
   font-weight: 500;
-  font-size: clamp(3rem, 1rem + 8.4vw, 8.75rem);
+  /* Shrinks for long amounts so the figure always fits the card (about 0.62em per character). */
+  font-size: min(clamp(3rem, 1rem + 8.4vw, 8.75rem), calc(100cqi / (var(--chars, 11) * 0.62)));
   line-height: 1;
   letter-spacing: -0.02em;
   font-variant-numeric: lining-nums tabular-nums;
@@ -230,7 +231,7 @@ img { max-width: 100%; height: auto; display: block; }
   .note { min-height: 0; }
   .note__body { padding: 52px 20px 56px; }
   .note__seal { width: 300px; height: 300px; right: -170px; top: 26px; margin-top: 0; opacity: 0.55; }
-  .note__figure { font-size: clamp(2.6rem, 13.4vw, 4.2rem); }
+  .note__figure { font-size: min(clamp(2.6rem, 13.4vw, 4.2rem), calc(100cqi / (var(--chars, 11) * 0.62))); }
   .walkthrough__bar { flex-direction: column; align-items: flex-start; }
 }
 @media (prefers-reduced-motion: reduce) {

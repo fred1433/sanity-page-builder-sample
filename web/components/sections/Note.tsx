@@ -40,7 +40,7 @@ export function Note({figure, seal}: {figure: Figure; seal?: ReactNode}) {
       <Lattice className="note__lattice note__lattice--top" />
       <div className="note__body">
         {figure.label && <figcaption className="note__caption">{figure.label}</figcaption>}
-        <p className="note__figure">
+        <p className="note__figure" style={{['--chars' as string]: formatted.length + 1}}>
           <span className="sr-only">{`${current.symbol}${formatted}`}</span>
           <span className="note__symbol" aria-hidden="true">
             {current.symbol}

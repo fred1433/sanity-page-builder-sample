@@ -18,7 +18,9 @@ export const testimonial = defineType({
       rows: 4,
       description: 'The customer’s words, without quotation marks. The site adds them.',
       validation: (Rule) => [
-        Rule.required().error('Write the quote. A testimonial without one cannot be shown.'),
+        Rule.required()
+          .custom((quote) => (typeof quote === 'string' && !quote.trim() ? 'Write the quote. A testimonial without one cannot be shown.' : true))
+          .error('Write the quote. A testimonial without one cannot be shown.'),
         Rule.max(320).warning('Over 320 characters the quote gets much taller than the ones beside it. Cut it to the sentence that matters.'),
       ],
     }),
@@ -27,7 +29,10 @@ export const testimonial = defineType({
       title: 'Name',
       type: 'string',
       description: 'Who said it, for example "Priya Raman".',
-      validation: (Rule) => Rule.required().error('Add the name of the person quoted. Unattributed quotes are not shown.'),
+      validation: (Rule) =>
+        Rule.required()
+          .custom((name) => (typeof name === 'string' && !name.trim() ? 'Add the name of the person quoted. Unattributed quotes are not shown.' : true))
+          .error('Add the name of the person quoted. Unattributed quotes are not shown.'),
     }),
     defineField({
       name: 'role',

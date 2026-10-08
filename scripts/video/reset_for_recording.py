@@ -2,7 +2,7 @@
 published without the testimonials section, draft = published + testimonials section, original heading."""
 import json, os, urllib.request, urllib.parse
 T = json.load(open(os.path.expanduser('~/.config/sanity/config.json')))['authToken']
-base = f"https://{os.environ.get('SANITY_PROJECT_ID', 'vg4jfonv')}.api.sanity.io/v2026-10-01/data"
+base = f"https://{os.environ['SANITY_PROJECT_ID']}.api.sanity.io/v2026-10-01/data"
 HEADING = 'Every bank, every entity, one cash position before the morning call.'
 def req(path, body=None):
     r = urllib.request.Request(base + path, data=json.dumps(body).encode() if body else None, headers={'Authorization': 'Bearer ' + T, 'Content-Type': 'application/json'})

@@ -3,6 +3,7 @@ import {draftMode} from 'next/headers'
 import {Bodoni_Moda, Schibsted_Grotesk} from 'next/font/google'
 import {VisualEditing} from 'next-sanity/visual-editing'
 import {SanityLive, sanityFetch} from '@/sanity/live'
+import {basePath, siteOrigin} from '@/sanity/env'
 import {NAV_QUERY} from '@/sanity/queries'
 import type {NavItem} from '@/sanity/types'
 import {SampleBanner} from '@/components/SampleBanner'
@@ -17,6 +18,13 @@ export const metadata: Metadata = {
   title: {default: 'Orvane', template: '%s, Orvane'},
   description: 'An independent Sanity and Next.js sample: a page builder, visual editing and a reviewed change. Fictional content.',
   robots: {index: false, follow: false},
+  metadataBase: new URL(siteOrigin),
+  openGraph: {
+    type: 'website',
+    siteName: 'Orvane, a Sanity sample',
+    images: [{url: `${basePath}/og.jpg`, width: 1200, height: 630, alt: 'The Orvane statement card: group cash of 48,216,930 pounds, with an engraved rosette'}],
+  },
+  twitter: {card: 'summary_large_image'},
 }
 
 export const viewport: Viewport = {themeColor: '#F1F3EE'}
