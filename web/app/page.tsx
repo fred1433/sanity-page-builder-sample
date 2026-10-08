@@ -13,5 +13,5 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   const {data} = (await sanityFetch({query: LANDING_QUERY})) as {data: PageData}
-  return <Sections sections={data?.sections} />
+  return <Sections sections={data?.sections} page={data ? {_id: data._id, _type: data._type} : undefined} />
 }

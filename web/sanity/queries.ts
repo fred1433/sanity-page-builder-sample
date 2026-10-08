@@ -8,6 +8,7 @@ const SECTIONS = `sections[]{
   _type == "hero" => {variant, heading, intro, figure, primary${LINK}, secondary${LINK}},
   _type == "featureGrid" => {heading, intro, columns, items[]{_key, title, body}},
   _type == "imageText" => {heading, body, imageSide, image{..., asset->{_id, url, metadata{dimensions, lqip}}}, link${LINK}},
+  _type == "testimonials" => {heading, items[]{_key, ...@->{_id, quote, name, role}}},
   _type == "cta" => {heading, body, tone, primary${LINK}, secondary${LINK}}
 }`
 

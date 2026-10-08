@@ -12,6 +12,7 @@ export const pageBuilder = defineType({
     defineArrayMember({type: 'hero'}),
     defineArrayMember({type: 'featureGrid'}),
     defineArrayMember({type: 'imageText'}),
+    defineArrayMember({type: 'testimonials'}),
     defineArrayMember({type: 'cta'}),
   ],
   options: {

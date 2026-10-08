@@ -171,7 +171,7 @@ async function main() {
   }
 
   const tx = client.transaction()
-  for (const doc of [landing, cash, forecasting]) tx.createOrReplace(doc)
+  for (const doc of [landing, cash, forecasting] as Array<{_id: string; _type: string}>) tx.createOrReplace(doc)
   await tx.commit()
   console.log('Seeded', [landing, cash, forecasting].map((d) => d._id).join(', '))
 }

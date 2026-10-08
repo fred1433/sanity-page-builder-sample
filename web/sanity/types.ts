@@ -31,9 +31,16 @@ export type ImageTextSection = {
   image?: {alt?: string; asset?: {_id: string; url: string; metadata?: {dimensions?: {width: number; height: number}; lqip?: string}}; hotspot?: unknown; crop?: unknown} | null
   link?: Link
 }
+// A testimonial whose document is missing or unpublished comes back without quote and name.
+export type TestimonialsSection = {
+  _key: string
+  _type: 'testimonials'
+  heading?: string
+  items?: {_key: string; _id?: string; quote?: string; name?: string; role?: string}[] | null
+}
 export type CtaSection = {_key: string; _type: 'cta'; heading?: string; body?: string; tone?: 'ink' | 'paper'; primary?: Link; secondary?: Link}
 
-export type Section = HeroSection | FeatureGridSection | ImageTextSection | CtaSection
+export type Section = HeroSection | FeatureGridSection | ImageTextSection | TestimonialsSection | CtaSection
 
 export type PageData = {_id: string; _type: 'landing' | 'solution'; title?: string; description?: string; slug?: string; sections?: Section[] | null} | null
 export type NavItem = {_id: string; title?: string; slug: string}

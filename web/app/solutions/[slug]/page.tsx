@@ -19,5 +19,5 @@ export default async function SolutionPage(props: Props) {
   const {slug} = await props.params
   const {data} = (await sanityFetch({query: SOLUTION_QUERY, params: {slug}})) as {data: PageData}
   if (!data) notFound()
-  return <Sections sections={data.sections} />
+  return <Sections sections={data.sections} page={{_id: data._id, _type: data._type}} />
 }
