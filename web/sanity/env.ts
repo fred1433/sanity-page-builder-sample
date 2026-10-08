@@ -1,0 +1,5 @@
+export const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'vg4jfonv'
+export const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
+export const apiVersion = '2026-10-01'
+export const studioUrl = process.env.NEXT_PUBLIC_SANITY_STUDIO_URL || 'http://localhost:3333'
+export const basePath = process.env.NEXT_PUBLIC_BASE_PATH || ''

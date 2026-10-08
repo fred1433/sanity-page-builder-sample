@@ -1,0 +1,10 @@
+{
+  // Copy to wrangler.jsonc and set your own route. NEXT_PUBLIC_BASE_PATH must match the route's path.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "my-sanity-site",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {"directory": ".open-next/assets", "binding": "ASSETS"},
+  "routes": [{"pattern": "example.com/my-site*", "zone_name": "example.com"}]
+}
