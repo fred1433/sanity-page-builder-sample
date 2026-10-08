@@ -29,8 +29,8 @@ Request given to Claude Code, verbatim:
 
 > Add an optional testimonials section to the existing page builder. Editors must be able to select and reorder testimonials. Require quote text and attribution. Keep the existing pages valid without this section and preserve their current content. Create the example content as drafts. Check the schema, query/types, frontend rendering and visual editing, including mobile.
 
-- The change: [commit cda2dbf](../../commit/cda2dbf), schema, validation, GROQ projection, hand-written types, responsive component, Presentation locations.
-- The review pass, by a separate Claude Code session: [commit 626af75](../../commit/626af75).
+- The change: [commit 6550fe9](../../commit/6550fe9), schema, validation, GROQ projection, hand-written types, responsive component, Presentation locations.
+- The review pass, by a separate Claude Code session: [commit d97c389](../../commit/d97c389). Details under [Review](#review).
 - Existing pages before and after: [`docs/review/before`](docs/review/before) and [`docs/review/after`](docs/review/after). Same page heights at 1440 and 390 px; the only pixel differences are the rosette ornament fixed during review.
 
 ## Content model and technical choices
@@ -48,21 +48,24 @@ Request given to Claude Code, verbatim:
 ```bash
 # Studio
 cd studio && npm install
-cp .env.example .env          # SANITY_STUDIO_PROJECT_ID, SANITY_STUDIO_DATASET, SANITY_STUDIO_PREVIEW_ORIGIN, SANITY_STUDIO_PREVIEW_BASE_PATH
+cp .env.example .env          # set SANITY_STUDIO_PROJECT_ID and SANITY_STUDIO_DATASET; the preview variables are optional
 npx sanity login
-npx sanity exec seed/seed.ts --with-user-token   # sample content, images from seed/images
-npx sanity dev
-
-# Front end
-cd web && npm install
-cp .env.example .env.local    # NEXT_PUBLIC_SANITY_PROJECT_ID, NEXT_PUBLIC_SANITY_DATASET, NEXT_PUBLIC_SANITY_STUDIO_URL, NEXT_PUBLIC_BASE_PATH, SANITY_API_READ_TOKEN
-npx sanity cors add http://localhost:3000 --credentials   # from studio/
-npm run dev
+npx sanity cors add http://localhost:3000 --credentials
+npx sanity exec seed/seed.ts --with-user-token   # three testimonials, the landing page and two solution pages
+npx sanity dev                # keeps running on http://localhost:3333
 ```
 
-- `SANITY_API_READ_TOKEN` is a Viewer token (`npx sanity tokens add "preview" --role=viewer`).
+```bash
+# Front end, in a second terminal from the repository root
+cd web && npm install
+cp .env.example .env.local    # set NEXT_PUBLIC_SANITY_PROJECT_ID, NEXT_PUBLIC_SANITY_DATASET and SANITY_API_READ_TOKEN
+npm run dev                   # http://localhost:3000 (plus NEXT_PUBLIC_BASE_PATH if you set one)
+```
+
+- There is no default project: without the `.env` files the Studio and the build stop with a message naming the missing variable.
+- `SANITY_API_READ_TOKEN` is a Viewer token (`npx sanity tokens add "preview" --role=viewer`, run from `studio/`).
 - Checks: `npx tsc --noEmit` and `npx sanity build` in `studio/`, `npx tsc --noEmit` and `npx next build` in `web/`, `npx sanity documents validate` for content.
-- `scripts/r9_presentation_check.py` drives the hosted Studio with Playwright and checks the four Presentation behaviours (click to field, live draft preview, public session unaffected, publish without redeploy). `scripts/page_snapshots.py` captures every page at 1440 and 390 px.
+- `scripts/r9_presentation_check.py` drives the hosted Studio with Playwright and checks the four Presentation behaviours (click to field, live draft preview, public session unaffected, publish without redeploy). `scripts/release_checks.py` checks the signed-out site, phone widths, the interactions, and that invalid content cannot be published from the Studio. `scripts/page_snapshots.py` captures every page at 1440 and 390 px. They read `SITE_URL`, `STUDIO_URL` and `SANITY_PROJECT_ID` from the environment.
 - Deploy: copy `web/wrangler.example.jsonc` to `wrangler.jsonc`, set your route, then `npm run deploy`.
 - No starter was used; the code follows the Sanity and next-sanity documentation for Studio 6 and next-sanity 13.
 
@@ -88,13 +91,13 @@ MCP discard_drafts    "Remove the temporary validation-check drafts"
 local next build, next start, Playwright checks of drafts at 1440 and 390 px, published pages compared with docs/review/before
 ```
 
-### Review note
+### Review
 
-Checked: the diff file by file, Studio validation on the drafts, draft rendering at 1440 and 390 px, the published pages before and after, and the four Presentation checks on the deployed site.
+The change was reviewed by Claude in a separate Claude Code session (the one that built the rest of the sample), not by the headless run that wrote it. It read the diff file by file, ran Studio validation on the drafts, checked the drafts at 1440 and 390 px, compared the published pages before and after, and ran the four Presentation checks on the deployed site.
 
-Corrected:
-- The example quotes named companies that could exist. They now describe a sector instead of a company.
-- The run noticed that the rosette ornament rendered as a black disc in the earlier snapshots. Cause: its first path lost its attributes after hydration. Fixed by serving the rosette as a static SVG file (`web/scripts/rosette-svg.mjs`), which also took the page from 850 KB of HTML to 150 KB.
-- `scripts/page_snapshots.py` waited for an idle network, which the live preview never reaches. It now waits for page load.
+What it changed, and where:
+- [Review pass, commit d97c389](../../commit/d97c389): the example quotes named companies that could exist, so their roles now describe a sector (the drafts were patched). The rosette ornament rendered as a black disc, which the run had noticed in the earlier snapshots: its first path lost its attributes after hydration, so the paths got an explicit `fill="none"` and the rosette moved to a server-rendered prop. `scripts/page_snapshots.py` waited for an idle network, which the live preview never reaches; it now waits for page load.
+- [Commit 4c95048](../../commit/4c95048), afterwards: the rosette became a static SVG file (`web/scripts/rosette-svg.mjs`), which took the page from 850 KB of HTML to 150 KB.
+- [Commit c6a9c67](../../commit/c6a9c67): a fresh review of the finished sample found more to fix. The rule for a CTA without a main button and the rule for a statement card missing an amount now block publishing (a zero amount counts as an amount), a quote or a name made only of spaces is rejected and never rendered, a testimonials section with no published quote renders nothing instead of a lone heading, the buttons link to pages instead of a placeholder address, the seed creates the three testimonials, long amounts shrink to fit the card, and the projects no longer fall back to a default Sanity project.
 
-After review, the three testimonials were published, and the landing page with its new section was published from the Studio (the moment is in the video). The Forecasting page's testimonials section is still a draft.
+After review the three testimonials and both pages that use them were published.

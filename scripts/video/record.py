@@ -183,9 +183,11 @@ with sync_playwright() as p:
     ctx = b.new_context(viewport={'width': 1440, 'height': 900}, record_video_dir=work, record_video_size={'width': 1440, 'height': 900})
     pg = ctx.new_page(); t_page = time.time()
     pg.goto(REPO_COMMIT, wait_until='load'); time.sleep(3)
-    cap(pg, 'The testimonials section was added as a separate commit, then reviewed. Both are in the repository.')
-    start = time.time(); time.sleep(3)
-    pg.mouse.wheel(0, 500); time.sleep(4)
+    cap(pg, 'The change is its own commit. Its testimonial type: quote and name required, each with a message that says how to fix it.')
+    start = time.time(); time.sleep(2)
+    for _ in range(10):
+        pg.mouse.wheel(0, 45); time.sleep(0.12)
+    time.sleep(3.8)
     mark('5b', pg, t_page, start, 7); pages.append((pg, ctx))
 
     for page, c in pages:
