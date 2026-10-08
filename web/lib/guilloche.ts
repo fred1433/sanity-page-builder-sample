@@ -9,7 +9,7 @@ const r1 = (n: number) => Math.round(n * 10) / 10
  * Returns one path per layer (ring net, petal crown, inner knot).
  */
 export function rosettePaths(cx: number, cy: number, scale = 1): string[] {
-  const ring = (radius: number, amp: number, lobes: number, phase: number, steps = 720) => {
+  const ring = (radius: number, amp: number, lobes: number, phase: number, steps = 400) => {
     let d = ''
     for (let i = 0; i <= steps; i++) {
       const t = (i / steps) * Math.PI * 2

@@ -6,7 +6,7 @@ export function Rosette({size = 360, className}: {size?: number; className?: str
   return (
     <svg className={className} viewBox={`0 0 ${size} ${size}`} width={size} height={size} aria-hidden="true">
       {paths.map((d, i) => (
-        <path key={i} d={d} className={`rosette__line rosette__line--${i}`} />
+        <path key={i} d={d} fill="none" className={`rosette__line rosette__line--${i}`} />
       ))}
     </svg>
   )

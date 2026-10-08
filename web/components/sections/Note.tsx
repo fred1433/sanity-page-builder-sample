@@ -1,7 +1,6 @@
 'use client'
 
-import {useState} from 'react'
-import {Rosette} from '../Rosette'
+import {useState, type ReactNode} from 'react'
 import {Lattice} from '../Lattice'
 
 const CURRENCIES = [
@@ -25,8 +24,11 @@ function Digit({value}: {value: number}) {
   )
 }
 
-/** The statement note: consolidated balance, switchable between three currencies. */
-export function Note({figure}: {figure: Figure}) {
+/**
+ * The statement note: consolidated balance, switchable between three currencies.
+ * The rosette is rendered on the server and passed in, so its long path data is not shipped twice.
+ */
+export function Note({figure, seal}: {figure: Figure; seal?: ReactNode}) {
   const available = CURRENCIES.filter((c) => typeof figure[c.key] === 'number')
   const [index, setIndex] = useState(0)
   if (!available.length) return null
@@ -68,7 +70,7 @@ export function Note({figure}: {figure: Figure}) {
         </div>
       </div>
       <div className="note__seal" style={{transform: `rotate(${index * 30}deg)`}}>
-        <Rosette size={390} />
+        {seal}
       </div>
       <Lattice className="note__lattice note__lattice--bottom" />
     </figure>

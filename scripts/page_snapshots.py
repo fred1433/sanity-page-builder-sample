@@ -15,8 +15,9 @@ with sync_playwright() as p:
     for w, h in [(1440, 900), (390, 844)]:
         pg = b.new_page(viewport={'width': w, 'height': h})
         for path in PAGES:
-            pg.goto(SITE + path, wait_until='networkidle')
-            time.sleep(1)
+            # The live preview connection keeps the network busy, so wait for load and a short settle instead of networkidle.
+            pg.goto(SITE + path, wait_until='load')
+            time.sleep(2.5)
             name = path.strip('/').split('/')[-1] or 'home'
             pg.screenshot(path=f'{out}/{name}-{w}.jpg', full_page=True, type='jpeg', quality=72)
             overflow = pg.evaluate('document.documentElement.scrollWidth > window.innerWidth')

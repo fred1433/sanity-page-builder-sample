@@ -20,7 +20,7 @@ export function Hero({section, isFirst}: {section: HeroSection; isFirst: boolean
       </div>
       {variant === 'statement' && section.figure && (
         <div className="wrap">
-          <Note figure={section.figure} />
+          <Note figure={section.figure} seal={<Rosette size={390} />} />
         </div>
       )}
     </section>
