@@ -17,3 +17,20 @@ export function latticePaths(w: number, h: number, waves = 6, wavelength = 28): 
   }
   return out
 }
+
+/** A small rosette for the wordmark: fewer, heavier rings that stay legible at 28 px. */
+export function sealPaths(size: number): string {
+  const c = size / 2
+  let d = ''
+  for (let j = 0; j < 6; j++) {
+    const radius = size * (0.18 + j * 0.055)
+    const amp = size * 0.035
+    for (let i = 0; i <= 120; i++) {
+      const t = (i / 120) * Math.PI * 2
+      const r = radius + amp * Math.sin(12 * t + j * 0.6)
+      d += `${i ? 'L' : 'M'}${r1(c + r * Math.cos(t))} ${r1(c + r * Math.sin(t))}`
+    }
+    d += 'Z'
+  }
+  return d
+}

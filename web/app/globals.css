@@ -49,6 +49,7 @@ img { max-width: 100%; height: auto; display: block; }
 /* Header */
 .site-header__inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 22px; }
 .wordmark { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 1.6rem; letter-spacing: -0.045em; }
+.wordmark__seal path { stroke: var(--green); stroke-width: 1.1; }
 .site-nav { display: flex; gap: clamp(16px, 3vw, 36px); font-weight: 500; }
 .site-nav a { text-decoration: none; padding-block: 6px; border-bottom: 1.5px solid transparent; }
 .site-nav a:hover { border-color: var(--ink); }
