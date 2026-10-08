@@ -5,7 +5,7 @@ Safety rules (they never touch existing work):
 - refuse to run, with exit code 2, if any page or testimonial already has a draft;
 - refuse to run if one of the dedicated test documents already exists;
 - write only to dedicated test documents (ids starting with "solution-check-" or "testimonial-check-");
-- clean up in a finally block, deleting with ifRevisionId so a newer change is never overwritten.
+- clean up in a finally block, deleting with ifRevisionID so a newer change is never overwritten.
 
 Environment: SANITY_PROJECT_ID, SANITY_DATASET, SITE_URL (with trailing slash), STUDIO_URL.
 The Studio session uses the Sanity CLI login token from ~/.config/sanity/config.json; it is never written anywhere.
@@ -55,8 +55,9 @@ def cleanup(test_ids):
     """Deletes the script's own test documents, each guarded by its current revision."""
     for doc in query('*[_id in $ids]{_id, _rev}', {'ids': test_ids + [f'drafts.{i}' for i in test_ids]}):
         assert doc['_id'].removeprefix('drafts.').startswith(TEST_PREFIXES)
-        # The no-op patch carries ifRevisionId: the transaction fails if the document changed since it was read.
-        mutate([{'patch': {'id': doc['_id'], 'ifRevisionId': doc['_rev'], 'set': {}}}, {'delete': {'id': doc['_id']}}])
+        # Delete does not take ifRevisionID, so a patch carrying it goes first in the same transaction:
+        # if the document changed since it was read, the whole transaction fails and nothing is deleted.
+        mutate([{'patch': {'id': doc['_id'], 'ifRevisionID': doc['_rev'], 'set': {'_checkCleanup': True}}}, {'delete': {'id': doc['_id']}}])
 
 
 class Results:
