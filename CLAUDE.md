@@ -17,11 +17,11 @@ A Sanity Studio and a Next.js front end for a fictional B2B company (Orvane). Ke
 
 ## Sanity MCP
 - Use it to read the deployed schema and existing documents, and to create example content as drafts.
-- Never publish documents and never deploy schemas through MCP.
+- Never publish documents and never deploy schemas through MCP. After a schema change, deploy the repository's schema with the CLI (`cd studio && npx sanity schema deploy`) so MCP sees the new types.
 - Content Lake does not run Studio validation, so check anything created through MCP with `cd studio && npx sanity documents validate --yes`.
 
 ## Checks before handing back
 - `cd studio && npx tsc --noEmit && npx sanity build --yes`
 - `cd web && npx tsc --noEmit && npx next build`
-- Existing pages must still render: compare `scripts/page_snapshots.py` output with `docs/review/before`.
-- Do not deploy and do not edit `.env*` files.
+- Existing pages must still render. A local preview runs with `cd web && npx next dev` (the site lives under `NEXT_PUBLIC_BASE_PATH`); `scripts/page_snapshots.py` captures every page at 1440 and 390 px for comparison with `docs/review/before`.
+- Do not deploy the Studio or the front end, do not commit, and do not edit `.env*` files.
